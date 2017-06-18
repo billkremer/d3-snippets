@@ -9,6 +9,10 @@ var x= d3.scaleBand()
 var y = d3.scaleLinear()
     .range([height,0]);
 
+    xAxis = d3.svg.axis()
+      .scale(x)
+      .orient("bottom");
+
 var chart = d3.select(".chart")
     .attr("height",height)
     .attr("width",width);
@@ -35,6 +39,8 @@ console.log(bar);
     .attr("y", function(d) { return y(d.value) + 3; })
     .attr("dy", ".75em")
     .text(function(d) { return d.value; });
+
+
 
 });
 
