@@ -1,3 +1,5 @@
+onload = function () {
+
 var width = 960,
     height = 500;
 
@@ -37,4 +39,7 @@ console.log(data);
 function type(d) {
   d.value = parseFloat(d.frequency); // coerce to number
   return d;
+}
+
+
 }
