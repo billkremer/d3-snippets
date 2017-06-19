@@ -2,14 +2,31 @@
 <meta charset="utf-8">
 <style>
 
+body {
+  background-color: blanchedalmond;
+}
+
 .chart rect {
   fill: steelblue;
 }
 
-.chart text {
-  fill: green;
+.bar {
+  fill: blue;
+}
+
+.bar text {
+  fill: yellow;
+  z-index: 1000;
+  color: orange;
   font: 10px sans-serif;
   text-anchor: middle;
+}
+
+.chart text {
+  fill: black;
+  font: 10px sans-serif;
+  text-anchor: middle;
+  z-index: 1000;
 }
 
 .axis text {
@@ -23,6 +40,10 @@
   shape-rendering: crispEdges;
 }
 
+.x.axis path,
+.y.axis path {
+  display: none;
+}
 </style>
 <svg class="chart"></svg>
 <script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
@@ -38,12 +59,17 @@ var y = d3.scale.linear()
     .range([height, 0]);
 
 var chart = d3.select(".chart")
-    .attr("width", width)
-    .attr("height", height);
+    .attr("width", width + 100)
+    .attr("height", height +100)
+    .attr("transform","translate(50,0)");
 
-    xAxis = d3.svg.axis()
+var xAxis = d3.svg.axis()
       .scale(x)
       .orient("bottom");
+
+var yAxis = d3.svg.axis()
+      .scale(y)
+      .orient("left");
 
 d3.csv("data.csv", type, function(error, data) {
   x.domain(data.map(function(d) { return d.letter; }));
@@ -52,8 +78,14 @@ d3.csv("data.csv", type, function(error, data) {
 console.log(data);
 
   chart.append("g")
+    .attr("class", "x axis")
     .attr("transform","translate(0,"+height+")")
     .call(xAxis);
+
+  chart.append("g")
+    .attr("class","y axis")
+    .attr("transform","translate(20,0)")
+    .call(yAxis);
 
   //var bar =
   chart.selectAll(".bar")
@@ -66,13 +98,13 @@ console.log(data);
       .attr("x", function(d) { return x(d.letter); })
       .attr("y", function(d) { return y(d.value); })
       .attr("height", function(d) { return height - y(d.value); })
-      .attr("width", x.rangeBand());
+      .attr("width", x.rangeBand())
 
-  // bar.append("text")
-  //     .attr("x", x.rangeBand() / 2)
-  //     .attr("y", function(d) { return y(d.value) + 3; })
-  //     .attr("dy", ".75em")
-  //     .text(function(d) { return d.value; });
+      .append("text")
+      .attr("x", x.rangeBand() / 2)
+      .attr("y", function(d) { return y(d.value) +30; })
+      .attr("dy", ".75em")
+      .text(function(d) { return d.value; });
 });
 
 function type(d) {
