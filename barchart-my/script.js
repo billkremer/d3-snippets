@@ -1,4 +1,4 @@
-
+// onload = function () {
 
 var width = 960;
 var height = 500;
@@ -9,7 +9,7 @@ var x= d3.scaleBand()
 var y = d3.scaleLinear()
     .range([height,0]);
 
-    xAxis = d3.svg.axis()
+var xAxis = d3.svg.axis()
       .scale(x)
       .orient("bottom");
 
@@ -50,3 +50,6 @@ function type(d) {
 //    console.log("d",d);
   return d;
 }
+
+
+//}
