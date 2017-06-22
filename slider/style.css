@@ -1,0 +1,32 @@
+.chart rect {
+  fill: steelblue;
+}
+
+.chart text {
+  fill: white;
+  font: 10px sans-serif;
+  text-anchor: middle;
+}
+
+
+body {
+  font: 12px sans-serif;
+  margin: 2px 2px;
+}
+
+
+#left {
+  width: calc(500px);
+  float:left;
+  height: 99vh;
+  overflow:auto;
+  min-height: 525px;
+}
+
+#right {
+  width: calc(98vw - 500px);
+  float:right;
+  height: 99vh;
+  overflow:auto;
+  min-height: 525px;
+}
