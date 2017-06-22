@@ -25,7 +25,7 @@ circleEnter.attr("cy",60)
 
 // var svg = d3.select("svg");
 
-circleEnter.exit().remove();
+
 
 function mover () {
   circle.attr("cx",function () {return Math.random()*500});
