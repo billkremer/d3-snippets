@@ -9,14 +9,15 @@ onload = function () {
     ["F",-4,4,0.5] // eff:
   ]
 
-  var install = d3.select("#left")
+  var install = d3.select("#slider")
 
   var input = install.selectAll("input")
       .data(sliderz);
 
-      input.enter().append("input")
-      .attr("type","range")
+      input.enter().append("div")
       .attr("id", function (d) {return "inputRange__"+ d[0];})
+      .append("input")
+      .attr("type","range")
       .property("min", function (d) {return d[1];})
       .property("max", function (d) {return d[2];})
       .property("step", function (d) {return (d[2] - d[1])/100 })
@@ -26,13 +27,14 @@ onload = function () {
       for (s of sliderz) {
         console.log("s",s);
         var and = d3.select("#inputRange__"+s[0]);
-        console.log(and.property("value"));
+        console.log(and.select("input").property("value"));
         and.insert("input", "#inputRange__"+s[0])
         .attr("type", "number")
-        .property("value",and.property("value"));
-
-
+        .property("value",and.select("input").property("value"));
       }
+
+// TODO now add listeners
+
       //
       // .append("input", function (d) {return "#inputRange__"+ d[0];})
       // .attr("type","number");
