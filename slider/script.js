@@ -15,9 +15,11 @@ onload = function () {
       .data(sliderz);
 
       input.enter().append("div")
-      .attr("id", function (d) {return "inputRange__"+ d[0];})
+      .attr("id", function (d) {return "input__"+ d[0];})
       .append("input")
+      .attr("id", function (d) {return "inputSlider__"+ d[0];})
       .attr("type","range")
+      .attr("class","inputSlider")
       .property("min", function (d) {return d[1];})
       .property("max", function (d) {return d[2];})
       .property("step", function (d) {return (d[2] - d[1])/100 })
@@ -25,15 +27,74 @@ onload = function () {
 
 
       for (s of sliderz) {
-        console.log("s",s);
-        var and = d3.select("#inputRange__"+s[0]);
-        console.log(and.select("input").property("value"));
-        and.insert("input", "#inputRange__"+s[0])
+        // console.log("s",s);
+        var and = d3.select("#input__"+s[0]);
+        // console.log(and.select("input").property("value"));
+        and.insert("input", "#input__"+s[0])
         .attr("type", "number")
-        .property("value",and.select("input").property("value"));
+        .property("value",and.select("input").property("value"))
+        .property("min", s[1])
+        .property("max", s[2])
+        .property("step",  (s[2] - s[1])/100)
+        .attr("class","inputBox")
+        .attr("id", "inputBox__"+s[0]);
       }
 
 // TODO now add listeners
+
+  d3.select("#slider").selectAll("input").on("change", function (a,b) {
+    // console.log("a",a,"b",b);
+    // console.log("this",this);
+    var idChanged = d3.select(this).attr("id");
+    var newValue = d3.select(this).property("value");
+    // console.log(idChanged, newValue);
+    synchSliderToBox(idChanged, newValue);
+  });
+
+  var synchSliderToBox = function (idChanged, newValue) {
+    var rangeOrBox = idChanged.split("__")[0]; // inputBox or inputSlider
+    var whichControl = idChanged.split("__")[1];
+    // console.log(rangeOrBox, whichControl);
+
+    if (rangeOrBox == "inputBox") {
+      d3.select("#inputSlider__"+whichControl)
+      .property("value",newValue);
+
+    } else if (rangeOrBox == "inputSlider") {
+      d3.select("#inputBox__"+whichControl)
+      .property("value",newValue);
+    };
+    buildEquationString();
+  };
+
+//  buildEquationString();
+
+  var buildEquationString = function () {
+      var values = d3.select("#slider").selectAll(".inputSlider").nodes();
+      //console.log(values.property("value"));
+      console.log(values);
+
+      console.log(values.length);
+      //values.property("value");
+
+  }
+
+
+//
+// d3.select("#crackCheckBox").on("change", slider_callback);
+//
+// d3.select("#install_type").selectAll('input')
+//   .on("change",function (a,b) {
+//     var toChange = d3.select(this).attr("value");
+//     changeInstallType(toChange);
+//   });
+//
+//   d3.select("#left").selectAll('.input').on("click",function (a,b) {
+//   var idToChange = d3.select(this).attr('id');
+//   var newerValue = parseFloat(d3.select(this).property('value'));
+//   var symbolToChange = d3.select(this).attr('symbol');
+//   inputBoxChange(idToChange, symbolToChange, newerValue);
+// });
 
       //
       // .append("input", function (d) {return "#inputRange__"+ d[0];})
