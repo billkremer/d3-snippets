@@ -1,4 +1,4 @@
-.chart rect {
+/*.chart rect {
   fill: steelblue;
 }
 
@@ -6,27 +6,56 @@
   fill: white;
   font: 10px sans-serif;
   text-anchor: middle;
-}
+}*/
 
 
 body {
   font: 12px sans-serif;
-  margin: 2px 2px;
+  /*margin: 2px 2px;*/
 }
 
+.inputDiv {
+  height: 30px;
+  /*width: 400px;*/
+  /*padding: 5px 0px;*/
+}
+
+input.inputBox {
+  width: 50px;
+}
+
+input.inputSlider {
+  width: 150px;
+  /*margin: 0px 5px 0px 10px;*/
+}
 
 #left {
-  width: calc(500px);
+  width: calc(400px);
   float:left;
   height: 99vh;
   overflow:auto;
   min-height: 525px;
+  margin-left: 8px;
 }
 
 #right {
-  width: calc(98vw - 500px);
+  width: calc(98vw - 420px);
   float:right;
   height: 99vh;
   overflow:auto;
   min-height: 525px;
+}
+
+#plotSVG {
+  width: calc(0.9 * (98vw - 420px));
+  height: 90vh;
+}
+
+path {
+  fill: none;
+  stroke: #000;
+}
+
+g {
+  /*fill: black;*/
 }
