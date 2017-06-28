@@ -1,0 +1,16 @@
+#left {
+  width: 48%;
+  float:left;
+  height: 99vh;
+  overflow:auto;
+  min-height: 525px;
+  margin-left: 8px;
+}
+
+#right {
+  width: 48%;
+  float:right;
+  height: 99vh;
+  overflow:auto;
+  min-height: 525px;
+}
