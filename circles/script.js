@@ -14,7 +14,7 @@ circleEnter.attr("cy",60)
 
 
 
-//window.setInterval(mover, 200);
+window.setInterval(mover, 2000);
 
 //  circle.data([100,1000,10000]);
 
