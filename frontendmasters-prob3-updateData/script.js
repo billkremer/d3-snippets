@@ -10,22 +10,81 @@ onload = function () {
   var w = 0.8* Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
   var h = 0.8* Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
 
-  d3.select("button").on("click", cycleData);
+  d3.select("button").on("mouseup", cycleData)
 
-  var cycleData = function () {
-
+  function cycleData () {
     //first change data:
-      var rand = Math.floor(Math.random()*3);
+      var rand = Math.floor(Math.random()*2);
       console.log(rand);
 
+      if (city == "New York") {
+        if (rand === 0) {
+          city = "Austin";
+        } else if (rand === 1) {
+          city = "San Francisco";
+        }
+      } else if (city == "Austin"){
+        if (rand === 0) {
+          city = "New York";
+        } else if (rand === 1) {
+          city = "San Francisco";
+        }
+      } else if (city == "San Francisco") {
+        if (rand === 0) {
+          city = "Austin";
+        } else if (rand === 1) {
+          city = "New York";
+        }
+      }
+
+      console.log(city);
+
+
+var data = d3.tsv("data.tsv", fix, function(err, data) {
 
 
 
+  var xScale = d3.scaleTime()
+    .domain(d3.extent(data, function(d) {return d.date;}))
+    .range([margin.left, w - margin.right]);
 
+  var yScale = d3.scaleLinear()
+    .domain([0, d3.max(data, function(d) {return d[city];})])
+    .range([h - margin.bottom, margin.top]);
 
+  var xAxis = d3.axisBottom()
+    .scale(xScale)
+    .tickFormat(d3.timeFormat('%b %Y'));
 
+  var yAxis = d3.axisLeft()
+    .scale(yScale);
+
+  var heightScale = d3.scaleLinear()
+    .domain([0, d3.max(data, function(d) {return d[city];})])
+    .range([0,h - margin.bottom - margin.top]);
+
+    var valLine = d3.line()
+      .x(function (d) {return xScale(d.date);})
+      .y(function (d) {return yScale(d[city]);})
+      .curve(d3.curveCardinal.tension(.5));
+
+    var update = d3.select("svg").transition();
+
+    update.select(".line")
+      .attr("d", valLine(data))
+      .attr("fill", "none")
+      .attr("stroke","black")
+      // .attr("transform", "translate(75,10)");
+
+    update.select(".x-axis")
+      .attr("transform", "translate(0," + (h - margin.bottom )+ ")")
+      .call(xAxis);
+
+    update.select(".y-axis")
+      .call(yAxis)
+      .attr("transform", "translate(" +margin.left+",0)");
+    })
   }
-
 
 
   var data = d3.tsv("data.tsv", fix, function(err, data) {
@@ -80,16 +139,19 @@ onload = function () {
         // .attr("transform", "translate(75,10)");
 
       svg.append("g")
+        .attr("class","x-axis")
         .attr("transform", "translate(0," + (h - margin.bottom )+ ")")
         .call(xAxis)
 ;
 
       svg.append("g")
+        .attr("class","y-axis")
         .call(yAxis)
         .attr("transform", "translate(" +margin.left+",0)");
 
 
   })
+
 
   function fix(d) {
 
