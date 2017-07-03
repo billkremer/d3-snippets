@@ -10,10 +10,30 @@ onload = function () {
   var w = 0.8* Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
   var h = 0.8* Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
 
+  d3.select("button").on("click", cycleData);
+
+  var cycleData = function () {
+
+    //first change data:
+      var rand = Math.floor(Math.random()*3);
+      console.log(rand);
+
+
+
+
+
+
+
+  }
+
+
+
   var data = d3.tsv("data.tsv", fix, function(err, data) {
 
     // data.date = new Date(d3.timeParse("%Y%m%d"));
-    // console.log(data);
+    console.log(data);
+
+    data = data.slice(0,50);
 
     var xScale = d3.scaleTime()
       .domain(d3.extent(data, function(d) {return d.date;}))
@@ -29,16 +49,16 @@ onload = function () {
 
     var svg = d3.select("svg")
 
-      svg.selectAll("rect")
-      .data(data)
-      .enter().append("rect")
-      .attr("width", 1.5)
-      // .attr("height", function (d) {return heightScale(d[city]);})
-      .attr("height", function (d) {return h - yScale(d[city]);})
-      .attr("transform", "translate(0,-" + margin.bottom + ")")
-      .attr("x", function (d) {return xScale(d.date);})
-      .attr("y", function (d) {return yScale(d[city]);})
-      .attr("fill", "black");
+      // svg.selectAll("rect")
+      // .data(data)
+      // .enter().append("rect")
+      // .attr("width", 1.5)
+      // // .attr("height", function (d) {return heightScale(d[city]);})
+      // .attr("height", function (d) {return h - yScale(d[city]);})
+      // .attr("transform", "translate(0,-" + margin.bottom + ")")
+      // .attr("x", function (d) {return xScale(d.date);})
+      // .attr("y", function (d) {return yScale(d[city]);})
+      // .attr("fill", "black");
 
       var xAxis = d3.axisBottom()
         .scale(xScale)
@@ -46,6 +66,18 @@ onload = function () {
 
       var yAxis = d3.axisLeft()
         .scale(yScale);
+
+      var valLine = d3.line()
+        .x(function (d) {return xScale(d.date);})
+        .y(function (d) {return yScale(d[city]);})
+        .curve(d3.curveCardinal.tension(.5));
+
+      svg.append("path")
+        .attr("class", "line")
+        .attr("d", valLine(data))
+        .attr("fill", "none")
+        .attr("stroke","black")
+        // .attr("transform", "translate(75,10)");
 
       svg.append("g")
         .attr("transform", "translate(0," + (h - margin.bottom )+ ")")
@@ -60,6 +92,7 @@ onload = function () {
   })
 
   function fix(d) {
+
     d.date = new Date(d3.timeParse("%Y%m%d")(d.date));
         // d.date = new Date(d.date); // x
     // d.value = +d.value; // coerce to number

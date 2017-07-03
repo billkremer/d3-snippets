@@ -45,7 +45,7 @@ onload = function () {
 
   // TODO now add listeners
 
-  d3.select("#slider").selectAll("input").on("click", function (a,b) {
+  d3.select("#slider").selectAll("input").on("keyup mouseup", function (a,b) {
     // console.log("a",a,"b",b);
     // console.log("this",this);
     var idChanged = d3.select(this).attr("id");
