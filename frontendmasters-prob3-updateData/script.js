@@ -68,7 +68,9 @@ var data = d3.tsv("data.tsv", fix, function(err, data) {
       .y(function (d) {return yScale(d[city]);})
       .curve(d3.curveCardinal.tension(.5));
 
-    var update = d3.select("svg").transition();
+    var update = d3.select("svg").transition()
+    .duration(500)
+    .ease(d3.easeLinear);
 
     update.select(".line")
       .attr("d", valLine(data))
@@ -83,7 +85,12 @@ var data = d3.tsv("data.tsv", fix, function(err, data) {
     update.select(".y-axis")
       .call(yAxis)
       .attr("transform", "translate(" +margin.left+",0)");
-    })
+
+    update.select(".cityName")
+      .text(city);
+    });
+
+
   }
 
 
@@ -148,6 +155,12 @@ var data = d3.tsv("data.tsv", fix, function(err, data) {
         .attr("class","y-axis")
         .call(yAxis)
         .attr("transform", "translate(" +margin.left+",0)");
+
+      svg.append("text")
+        .attr("class","cityName")
+        .attr("x", margin.left + 100)
+        .attr("y", h - margin.bottom - 100)
+        .text(city);
 
 
   })
