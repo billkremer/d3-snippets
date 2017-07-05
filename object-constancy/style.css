@@ -9,6 +9,10 @@ svg {
   fill: steelblue;
 }
 
+/*rect {
+  fill: black;
+}*/
+
 .bar:hover rect {
   fill: brown;
 }
