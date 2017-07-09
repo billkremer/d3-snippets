@@ -122,6 +122,14 @@ function redraw() {
 
 
 
+
+
+// TODO go back, change proper stuff to function(d) ...
+
+
+
+
+
     barEnter.append("text") // y axis label, not really axis labels though
       .attr("class", "label") // just appended to end of bar
       .attr("x", -3)
