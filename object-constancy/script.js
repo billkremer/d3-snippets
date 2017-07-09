@@ -13,7 +13,7 @@ onload = function () {
     .range([0,width]);
 
   var y = d3.scaleOrdinal()
-    .range([0,height],0.1);
+    .range([0,height]);
 
     var xAxis = d3.axisTop()
       .scale(x)
@@ -38,7 +38,7 @@ onload = function () {
     .attr("class", "y axis")
     .append("line")
     .attr("class", "domain")
-    .attr("y2",height)
+    // .attr("y2",height)
 
     var menu = d3.select("#menu").select("select")
       .on("change",change)
@@ -94,34 +94,38 @@ function redraw() {
 
   y.domain(top.map(function (d) { return d.State;}   ));
 // console.log(y.domain()); // array of the top ten states "ND", "DC", etc
+  x.domain([0, top[0][age = age1]]); // resets the domain.
 
   var yBand = d3.scaleBand()
     .domain(top.map(function (d) { return d.State;}   ))
-    .range([0,height],0.1);
+    .range([0,height]);
 
-      // console.log(yBand.bandwidth()); // 0.1 ?
+      // console.log(yBand.bandwidth()); // 21 = (250 - 20 - 20) /10
 
 
   var bar = svg.selectAll(".bar")
     .data(top, function (d) {return d.State;});
 
+    bar.exit().remove();
+
   var barEnter = bar.enter().insert("g", ".axis") // y axis
     .attr("class", "bar")
-    .attr("transform", function (d) {
-      console.log( "y", y(d.State) );
-       return "translate(0," + (y(d.State) + height) +  ")"})
+    .attr("transform", function (d,i) {
+      console.log("yba",yBand(d.State));
+      // console.log( "y", y(d.State) );
+       return "translate(0," + (-yBand(d.State) + height) +  ")"})
     .style("fill-opacity",0.25);
 
     barEnter.append("rect")
       .attr("width", age && function(d) {return x(d[age]); })
-      .attr("height",  yBand.bandwidth());
+      .attr("height",  function(d) {return yBand(d.State);});
 
 
 
     barEnter.append("text") // y axis label, not really axis labels though
       .attr("class", "label") // just appended to end of bar
       .attr("x", -3)
-      .attr("y", yBand.bandwidth() /2)
+      .attr("y", function (d) {return yBand(d.State)/2;})
       .attr("dy", ".35em")
       .attr("text-anchor", "end")
       .text(function (d) {return d.State; });
@@ -129,36 +133,39 @@ function redraw() {
     barEnter.append("text") // bar value placeholder?
       .attr("class", "value")
       .attr("x", age && function(d) {return x(d[age])-3;})
-      .attr("y",  yBand.bandwidth()/2)
+      .attr("y",  function (d) {return yBand(d.State)/2;})
       .attr("dy", ".35em")
       .attr("text-anchor","end")
       // .text(function (d) {return d[age];})
 
-    x.domain([0, top[0][age = age1]]); // resets the domain.
-
-    var barUpdate = bar.transition()
-      .attr("transform", function (d) {
-        console.log(y(0),"dstate");
-        return "translate(0," + ( y(0)-y(d.State)) + ")";
-      })
-      .style("fill-opacity", 1);
-
-    barUpdate.select("rect")
-      .attr("width", function (d) { return x(d[age]);});
-
-    barUpdate.select(".value")
-      .attr("x", function (d) {return x(d[age])-3})
-      .text(function (d) {return format(d[age]);});
 
 
-    var barExit = bar.transition()
+    bar = barEnter.merge(bar)
+
+
+    // var barUpdate = bar.transition()
+    //   .attr("transform", function (d) {
+    //     console.log(y(0),"dstate");
+    //     return "translate(0," + ( y(0)-y(d.State)) + ")";
+    //   })
+    //   .style("fill-opacity", 1);
+    //
+    // barUpdate.select("rect")
+    //   .attr("width", function (d) { return x(d[age]);});
+    //
+    // barUpdate.select(".value")
+    //   .attr("x", function (d) {return x(d[age])-3})
+    //   .text(function (d) {return format(d[age]);});
+    //
+    //
+    var barExit = bar.exit().transition()
       .attr("transform", function(d) {return "translate(0, " + ( y(0)+ height) + ")";})
       .style("fill-opacity", 0.7)
       .remove();
-
-    barExit.select(".value")
-      .attr("x", function (d) { return x(d[age])-3; })
-      .text(function (d) { return format(d[age])});
+    //
+    // barExit.select(".value")
+    //   .attr("x", function (d) { return x(d[age])-3; })
+    //   .text(function (d) { return format(d[age])});
 
     d3.transition(svg).select(".x.axis")
       .call(xAxis);
