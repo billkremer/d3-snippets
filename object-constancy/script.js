@@ -108,15 +108,18 @@ console.log(y.domain()); // array of the top ten states "ND", "DC", etc
 
     // bar.exit().remove();
 
-  var barEnter = bar.enter().insert("g", ".axis") // y axis
+
+  var barEnter = bar.enter().insert("g", ".axis")
+   // y axis
     .attr("class", "bar")
     .attr("transform", function (d,i) {
-      console.log("yba",yBand(d.State));
+      // console.log("yba",yBand(d.State));
       // console.log( "y", y(d.State) );
        return "translate(0," + (yBand(d.State)) +  ")"})
     .style("fill-opacity",1);
 
-    barEnter.append("rect")
+    barEnter.append("rect").transition()
+               .duration(5000)
       .attr("width", age && function(d) {return x(d[age]); })
       .attr("height", yBand.bandwidth());
 
@@ -140,15 +143,10 @@ console.log(y.domain()); // array of the top ten states "ND", "DC", etc
       .attr("text-anchor","end")
       .text(function (d) {return format(d[age]);})
 
-
-
-    // bar = barEnter.merge(bar)
-
-
     var barUpdate = bar.transition()
-          .duration(5000)
+          .duration(1000)
       .attr("transform", function (d) {
-        console.log(y(0),y(1),y(2),"dstate");
+        console.log(y(0),y(1),"dstate");
         return "translate(0," + (yBand(d.State)) + ")";
       })
       .style("fill-opacity", 1);
@@ -156,7 +154,7 @@ console.log(y.domain()); // array of the top ten states "ND", "DC", etc
     barUpdate.select("rect")
       .attr("width", function (d) { return x(d[age]);});
 
-    barUpdate.select(".value")
+    barUpdate.select(".value").transition().duration(5000) // updated bars grow or shrink slower
       .attr("x", function (d) {return x(d[age])-3})
       .text(function (d) {return format(d[age]);});
 
@@ -167,7 +165,7 @@ console.log(y.domain()); // array of the top ten states "ND", "DC", etc
       .style("fill-opacity", 0)
       .remove();
 
-    barExit.select(".value")
+    barExit.select(".value") //.transition().duration(5000)
       .attr("x", function (d) { return x(d[age])-3; })
       .text(function (d) { return format(d[age])});
 
@@ -179,7 +177,7 @@ console.log(y.domain()); // array of the top ten states "ND", "DC", etc
 var timeout = setTimeout(function() {
   menu.property("value", "65 Years and Over").node().focus();
   change();
-}, 5000)
+}, 10000)
 
 
 
