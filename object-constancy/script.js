@@ -38,7 +38,7 @@ onload = function () {
     .attr("class", "y axis")
     .append("line")
     .attr("class", "domain")
-    // .attr("y2",height)
+    .attr("y2",height)
 
     var menu = d3.select("#menu").select("select")
       .on("change",change)
@@ -81,7 +81,7 @@ function change() {
     clearTimeout(timeout); // clears automatic cycling through list
 
     d3.transition()
-      .duration(altKey ? 7500 : 750)
+      .duration(5000)
       .each(redraw);
 
 }
@@ -93,7 +93,7 @@ function redraw() {
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort
 
   y.domain(top.map(function (d) { return d.State;}   ));
-// console.log(y.domain()); // array of the top ten states "ND", "DC", etc
+console.log(y.domain()); // array of the top ten states "ND", "DC", etc
   x.domain([0, top[0][age = age1]]); // resets the domain.
 
   var yBand = d3.scaleBand()
@@ -106,34 +106,28 @@ function redraw() {
   var bar = svg.selectAll(".bar")
     .data(top, function (d) {return d.State;});
 
-    bar.exit().remove();
+    // bar.exit().remove();
 
   var barEnter = bar.enter().insert("g", ".axis") // y axis
     .attr("class", "bar")
     .attr("transform", function (d,i) {
       console.log("yba",yBand(d.State));
       // console.log( "y", y(d.State) );
-       return "translate(0," + (-yBand(d.State) + height) +  ")"})
-    .style("fill-opacity",0.25);
+       return "translate(0," + (yBand(d.State)) +  ")"})
+    .style("fill-opacity",1);
 
     barEnter.append("rect")
       .attr("width", age && function(d) {return x(d[age]); })
-      .attr("height",  function(d) {return yBand(d.State);});
+      .attr("height", yBand.bandwidth());
 
 
-
-
-
-// TODO go back, change proper stuff to function(d) ...
-
-
-
+// TODO add a transition to the entering data
 
 
     barEnter.append("text") // y axis label, not really axis labels though
       .attr("class", "label") // just appended to end of bar
       .attr("x", -3)
-      .attr("y", function (d) {return yBand(d.State)/2;})
+      .attr("y", function (d) {return yBand.bandwidth()/2;})
       .attr("dy", ".35em")
       .attr("text-anchor", "end")
       .text(function (d) {return d.State; });
@@ -141,39 +135,41 @@ function redraw() {
     barEnter.append("text") // bar value placeholder?
       .attr("class", "value")
       .attr("x", age && function(d) {return x(d[age])-3;})
-      .attr("y",  function (d) {return yBand(d.State)/2;})
+      .attr("y",  function (d) {return yBand.bandwidth()/2;})
       .attr("dy", ".35em")
       .attr("text-anchor","end")
-      // .text(function (d) {return d[age];})
+      .text(function (d) {return format(d[age]);})
 
 
 
-    bar = barEnter.merge(bar)
+    // bar = barEnter.merge(bar)
 
 
-    // var barUpdate = bar.transition()
-    //   .attr("transform", function (d) {
-    //     console.log(y(0),"dstate");
-    //     return "translate(0," + ( y(0)-y(d.State)) + ")";
-    //   })
-    //   .style("fill-opacity", 1);
-    //
-    // barUpdate.select("rect")
-    //   .attr("width", function (d) { return x(d[age]);});
-    //
-    // barUpdate.select(".value")
-    //   .attr("x", function (d) {return x(d[age])-3})
-    //   .text(function (d) {return format(d[age]);});
-    //
+    var barUpdate = bar.transition()
+          .duration(5000)
+      .attr("transform", function (d) {
+        console.log(y(0),y(1),y(2),"dstate");
+        return "translate(0," + (yBand(d.State)) + ")";
+      })
+      .style("fill-opacity", 1);
+
+    barUpdate.select("rect")
+      .attr("width", function (d) { return x(d[age]);});
+
+    barUpdate.select(".value")
+      .attr("x", function (d) {return x(d[age])-3})
+      .text(function (d) {return format(d[age]);});
+
     //
     var barExit = bar.exit().transition()
-      .attr("transform", function(d) {return "translate(0, " + ( y(0)+ height) + ")";})
-      .style("fill-opacity", 0.7)
+      .duration(5000)
+      .attr("transform", function(d) {return "translate(0, " + (y(1)+ height) + ")";})
+      .style("fill-opacity", 0)
       .remove();
-    //
-    // barExit.select(".value")
-    //   .attr("x", function (d) { return x(d[age])-3; })
-    //   .text(function (d) { return format(d[age])});
+
+    barExit.select(".value")
+      .attr("x", function (d) { return x(d[age])-3; })
+      .text(function (d) { return format(d[age])});
 
     d3.transition(svg).select(".x.axis")
       .call(xAxis);
