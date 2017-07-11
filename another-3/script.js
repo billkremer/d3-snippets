@@ -1,7 +1,8 @@
 onload = function () {
 
-  var width = 960,
-      height = 500;
+  var width = 960;
+  var height = 500;
+  var padding = 20;
 
 
     var svg = d3.select("body").append("svg")
@@ -23,13 +24,16 @@ onload = function () {
 
     var xScale = d3.scaleLinear()
       .domain([0, d3.max(dataset, function (d) {return d[0];})])
-      .range([20, width-20]);
+      .range([padding, width-padding]);
 
     var yScale = d3.scaleLinear()
       .domain([0, d3.max(dataset, function(d) {return d[1];})])
-      .range([height-20, 20]);
+      .range([height-padding, padding]);
 
 
+    var rScale = d3.scaleLinear()
+      .domain([0, d3.max(dataset, function (d) { return (Math.sqrt(d[0]*d[0] + d[1]*d[1])); })])
+      .range([5,25]);
 
 
     svg.selectAll("circle")
@@ -37,7 +41,7 @@ onload = function () {
     .enter().append("circle")
     .attr("cx", function (d) {return xScale(d[0]);})
     .attr("cy", function (d) {return yScale(d[1]);})
-    .attr("r", 5)
+    .attr("r", function (d) {return rScale(Math.sqrt(d[0]*d[0] + d[1]*d[1]))})
 
 
       svg.selectAll("text")

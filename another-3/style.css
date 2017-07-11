@@ -5,5 +5,10 @@ rect {
 
 text {
   fill: black;
+  stroke: black;
+}
+
+circle {
+  fill: green;
   stroke: green;
 }

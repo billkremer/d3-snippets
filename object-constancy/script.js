@@ -98,7 +98,8 @@ console.log(y.domain()); // array of the top ten states "ND", "DC", etc
 
   var yBand = d3.scaleBand()
     .domain(top.map(function (d) { return d.State;}   ))
-    .range([0,height]);
+    .range([0,height])
+    .paddingInner([0.1]); // makes the bars distinct
 
       // console.log(yBand.bandwidth()); // 21 = (250 - 20 - 20) /10
 
@@ -121,7 +122,7 @@ console.log(y.domain()); // array of the top ten states "ND", "DC", etc
     barEnter.append("rect").transition()
                .duration(5000)
       .attr("width", age && function(d) {return x(d[age]); })
-      .attr("height", (yBand.bandwidth()-0.5));
+      .attr("height", (yBand.bandwidth()));
 
 
 // TODO add a transition to the entering data
