@@ -121,7 +121,7 @@ console.log(y.domain()); // array of the top ten states "ND", "DC", etc
     barEnter.append("rect").transition()
                .duration(5000)
       .attr("width", age && function(d) {return x(d[age]); })
-      .attr("height", yBand.bandwidth());
+      .attr("height", (yBand.bandwidth()-0.5));
 
 
 // TODO add a transition to the entering data
@@ -144,7 +144,7 @@ console.log(y.domain()); // array of the top ten states "ND", "DC", etc
       .text(function (d) {return format(d[age]);})
 
     var barUpdate = bar.transition()
-          .duration(1000)
+          .duration(5000)
       .attr("transform", function (d) {
         console.log(y(0),y(1),"dstate");
         return "translate(0," + (yBand(d.State)) + ")";
